@@ -1,0 +1,134 @@
+{
+    "annotations": {
+      "list": []
+    },
+    "editable": true,
+    "gnetId": null,
+    "graphTooltip": 0,
+    "id": null,
+    "panels": [
+      {
+        "datasource": "$datasource",
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 0
+        },
+        "id": 1,
+        "targets": [
+          {
+            "expr": "sum(rate(istio_requests_total{destination_workload_namespace=\"$namespace\", response_code=~\"2..\"}[5m]))",
+            "legendFormat": "2xx Responses",
+            "refId": "A"
+          },
+          {
+            "expr": "sum(rate(istio_requests_total{destination_workload_namespace=\"$namespace\", response_code=~\"4..\"}[5m]))",
+            "legendFormat": "4xx Responses",
+            "refId": "B"
+          },
+          {
+            "expr": "sum(rate(istio_requests_total{destination_workload_namespace=\"$namespace\", response_code=~\"5..\"}[5m]))",
+            "legendFormat": "5xx Responses",
+            "refId": "C"
+          }
+        ],
+        "title": "HTTP Response Codes",
+        "type": "timeseries"
+      },
+      {
+        "datasource": "$datasource",
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 0
+        },
+        "id": 2,
+        "targets": [
+          {
+            "expr": "sum(rate(istio_requests_total{destination_workload_namespace=\"$namespace\", request_protocol=\"http\"}[5m]))",
+            "legendFormat": "HTTP Requests",
+            "refId": "A"
+          },
+          {
+            "expr": "sum(rate(istio_requests_total{destination_workload_namespace=\"$namespace\", request_protocol=\"https\"}[5m]))",
+            "legendFormat": "HTTPS Requests",
+            "refId": "B"
+          }
+        ],
+        "title": "HTTP/HTTPS Requests",
+        "type": "timeseries"
+      },
+      {
+        "datasource": "$datasource",
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 8
+        },
+        "id": 3,
+        "targets": [
+          {
+            "expr": "sum(rate(istio_requests_total{destination_workload_namespace=\"$namespace\", response_code=~\"5..\"}[5m]))",
+            "legendFormat": "Failed Requests (5xx)",
+            "refId": "A"
+          }
+        ],
+        "title": "Failed Requests",
+        "type": "timeseries"
+      },
+      {
+        "datasource": "$datasource",
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 8
+        },
+        "id": 4,
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.50, sum(rate(istio_request_duration_seconds_bucket{destination_workload_namespace=\"$namespace\"}[5m])) by (le))",
+            "legendFormat": "p50",
+            "refId": "A"
+          },
+          {
+            "expr": "histogram_quantile(0.90, sum(rate(istio_request_duration_seconds_bucket{destination_workload_namespace=\"$namespace\"}[5m])) by (le))",
+            "legendFormat": "p90",
+            "refId": "B"
+          },
+          {
+            "expr": "histogram_quantile(0.99, sum(rate(istio_request_duration_seconds_bucket{destination_workload_namespace=\"$namespace\"}[5m])) by (le))",
+            "legendFormat": "p99",
+            "refId": "C"
+          }
+        ],
+        "title": "Request Latency",
+        "type": "timeseries"
+      }
+    ],
+    "templating": {
+      "list": [
+        {
+          "name": "namespace",
+          "label": "Namespace",
+          "query": "label_values(istio_requests_total, destination_workload_namespace)",
+          "refresh": 1,
+          "type": "query"
+        },
+        {
+          "name": "datasource",
+          "label": "Datasource",
+          "query": "prometheus",
+          "refresh": 1,
+          "type": "datasource",
+          "pluginId": "prometheus"
+        }
+      ]
+    },
+    "title": "HTTP/HTTPS Monitoring (Namespace Level)",
+    "version": 1
+  }
+  

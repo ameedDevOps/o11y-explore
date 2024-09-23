@@ -1,0 +1,74 @@
+---
+# Service Account for Cluster Agent
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: datadog-cluster-agent
+  namespace: default
+---
+# ClusterRole for Cluster Agent
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: datadog-cluster-agent
+rules:
+  - apiGroups: [""]
+    resources: ["pods", "nodes", "services", "events", "endpoints"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["namespaces", "configmaps"]
+    verbs: ["get", "list"]
+  - apiGroups: ["apps"]
+    resources: ["replicasets", "deployments"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["batch"]
+    resources: ["jobs", "cronjobs"]
+    verbs: ["get", "list", "watch"]
+---
+# ClusterRoleBinding for Cluster Agent
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: datadog-cluster-agent
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: datadog-cluster-agent
+subjects:
+  - kind: ServiceAccount
+    name: datadog-cluster-agent
+    namespace: default
+---
+# Service Account for Node Agent
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: datadog-agent
+  namespace: default
+---
+# ClusterRole for Node Agent
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: datadog-agent
+rules:
+  - apiGroups: [""]
+    resources: ["pods", "nodes", "services", "events"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["endpoints"]
+    verbs: ["get", "list", "watch"]
+---
+# ClusterRoleBinding for Node Agent
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: datadog-agent
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: datadog-agent
+subjects:
+  - kind: ServiceAccount
+    name: datadog-agent
+    namespace: default

@@ -1,0 +1,5 @@
+apiVersion: v2
+name: datadog-custom
+description: Custom Datadog deployment for EKS cluster monitoring
+version: 0.1.0
+appVersion: "latest"

@@ -1,0 +1,263 @@
+{
+    "annotations": {
+      "list": []
+    },
+    "panels": [
+      {
+        "type": "stat",
+        "title": "CPU Usage",
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "100 - (avg by(instance) (rate(node_cpu_seconds_total{job=\"node-exporter\",mode=\"idle\"}[5m])) * 100)",
+            "format": "time_series"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent"
+          }
+        }
+      },
+      {
+        "type": "stat",
+        "title": "Current CPU Utilization %",
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "avg by (instance) (rate(container_cpu_usage_seconds_total{image!=\"\", container!=\"POD\", namespace=~\"default\"}[5m])) * 100",
+            "format": "time_series"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent"
+          }
+        }
+      },
+      {
+        "type": "stat",
+        "title": "Current Memory Utilization",
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "sum(container_memory_usage_bytes{namespace=~\"default\",container!=\"POD\",image!=\"\"}) by (namespace) / sum(machine_memory_bytes) by (instance) * 100",
+            "format": "time_series"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent"
+          }
+        }
+      },
+      {
+        "type": "stat",
+        "title": "Network Input",
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "sum(rate(node_network_receive_bytes_total[5m])) by (instance)",
+            "format": "time_series"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "Bps"
+          }
+        }
+      },
+      {
+        "type": "stat",
+        "title": "Network Output",
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "sum(rate(node_network_transmit_bytes_total[5m])) by (instance)",
+            "format": "time_series"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "Bps"
+          }
+        }
+      },
+      {
+        "type": "stat",
+        "title": "Response 2XX / 5m",
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "sum(rate(nginx_http_requests_total{status=~\"2..\"}[5m]))",
+            "format": "time_series"
+          }
+        ]
+      },
+      {
+        "type": "stat",
+        "title": "Total Response 200 Req. [24h]",
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "sum(increase(nginx_http_requests_total{status=\"200\"}[24h]))",
+            "format": "time_series"
+          }
+        ]
+      },
+      {
+        "type": "stat",
+        "title": "Response 4XX / 5m",
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "sum(rate(nginx_http_requests_total{status=~\"4..\"}[5m]))",
+            "format": "time_series"
+          }
+        ]
+      },
+      {
+        "type": "stat",
+        "title": "Total Response 404 Req. [24h]",
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "sum(increase(nginx_http_requests_total{status=\"404\"}[24h]))",
+            "format": "time_series"
+          }
+        ]
+      },
+      {
+        "type": "stat",
+        "title": "Response 3XX",
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "sum(rate(nginx_http_requests_total{status=~\"3..\"}[5m]))",
+            "format": "time_series"
+          }
+        ]
+      },
+      {
+        "type": "stat",
+        "title": "Response 5XX",
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "sum(rate(nginx_http_requests_total{status=~\"5..\"}[5m]))",
+            "format": "time_series"
+          }
+        ]
+      },
+      {
+        "type": "stat",
+        "title": "Total Request 503 Response",
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "sum(increase(nginx_http_requests_total{status=\"503\"}[24h]))",
+            "format": "time_series"
+          }
+        ]
+      },
+      {
+        "type": "stat",
+        "title": "Nginx Connections Accepted",
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "nginx_connections_accepted_total",
+            "format": "time_series"
+          }
+        ]
+      },
+      {
+        "type": "stat",
+        "title": "Nginx Writing",
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "nginx_connections_writing",
+            "format": "time_series"
+          }
+        ]
+      },
+      {
+        "type": "stat",
+        "title": "Nginx Active Connections",
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "nginx_connections_active",
+            "format": "time_series"
+          }
+        ]
+      },
+      {
+        "type": "stat",
+        "title": "Nginx Waiting Connections",
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "nginx_connections_waiting",
+            "format": "time_series"
+          }
+        ]
+      },
+      {
+        "type": "stat",
+        "title": "Handled Request",
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "nginx_http_requests_total",
+            "format": "time_series"
+          }
+        ]
+      },
+      {
+        "type": "stat",
+        "title": "Nginx Requests",
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "rate(nginx_http_requests_total[5m])",
+            "format": "time_series"
+          }
+        ]
+      },
+      {
+        "type": "stat",
+        "title": "Nginx Reading",
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "nginx_connections_reading",
+            "format": "time_series"
+          }
+        ]
+      },
+      {
+        "type": "table",
+        "title": "Each Request Detail",
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "nginx_http_requests_total",
+            "format": "time_series"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short"
+          }
+        }
+      }
+    ],
+    "title": "Custom NGINX and System Dashboard",
+    "time": {
+      "from": "now-6h",
+      "to": "now"
+    }
+  }
+  

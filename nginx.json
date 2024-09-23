@@ -1,0 +1,602 @@
+{
+    "dashboard": {
+      "id": null,
+      "title": "System and Nginx Monitoring",
+      "uid": "system-nginx-dashboard",
+      "timezone": "browser",
+      "schemaVersion": 30,
+      "version": 1,
+      "refresh": "5s",
+      "panels": [
+        {
+          "type": "row",
+          "title": "CPU and Memory",
+          "panels": [
+            {
+              "type": "graph",
+              "title": "CPU Usage",
+              "datasource": "Prometheus",
+              "targets": [
+                {
+                  "expr": "100 - (avg by (instance) (irate(node_cpu_seconds_total{mode='idle'}[5m])) * 100)",
+                  "legendFormat": "{{instance}}",
+                  "refId": "A"
+                }
+              ],
+              "id": 1,
+              "gridPos": {
+                "x": 0,
+                "y": 0,
+                "w": 8,
+                "h": 4
+              },
+              "options": {
+                "fill": 1,
+                "lineWidth": 2,
+                "palette": "color",
+                "colors": ["#FF5733", "#33FF57", "#3357FF"]
+              }
+            },
+            {
+              "type": "gauge",
+              "title": "Current CPU Utilization %",
+              "datasource": "Prometheus",
+              "targets": [
+                {
+                  "expr": "100 - (avg(irate(node_cpu_seconds_total{mode='idle'}[5m])) * 100)",
+                  "legendFormat": "{{instance}}",
+                  "refId": "B"
+                }
+              ],
+              "id": 2,
+              "gridPos": {
+                "x": 8,
+                "y": 0,
+                "w": 4,
+                "h": 4
+              },
+              "options": {
+                "min": 0,
+                "max": 100,
+                "thresholds": "60,80",
+                "colors": ["#FF0000", "#FFFF00", "#00FF00"]
+              }
+            },
+            {
+              "type": "gauge",
+              "title": "Current Memory Utilization",
+              "datasource": "Prometheus",
+              "targets": [
+                {
+                  "expr": "(node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes * 100",
+                  "refId": "C"
+                }
+              ],
+              "id": 3,
+              "gridPos": {
+                "x": 12,
+                "y": 0,
+                "w": 4,
+                "h": 4
+              },
+              "options": {
+                "min": 0,
+                "max": 100,
+                "thresholds": "70,85",
+                "colors": ["#FF0000", "#FFFF00", "#00FF00"]
+              }
+            }
+          ]
+        },
+        {
+          "type": "row",
+          "title": "Network Metrics",
+          "panels": [
+            {
+              "type": "graph",
+              "title": "Network Input",
+              "datasource": "Prometheus",
+              "targets": [
+                {
+                  "expr": "irate(node_network_receive_bytes_total[5m])",
+                  "legendFormat": "{{instance}}",
+                  "refId": "D"
+                }
+              ],
+              "id": 4,
+              "gridPos": {
+                "x": 0,
+                "y": 1,
+                "w": 8,
+                "h": 4
+              },
+              "options": {
+                "fill": 1,
+                "lineWidth": 2,
+                "colors": ["#1E90FF"]
+              }
+            },
+            {
+              "type": "graph",
+              "title": "Network Output",
+              "datasource": "Prometheus",
+              "targets": [
+                {
+                  "expr": "irate(node_network_transmit_bytes_total[5m])",
+                  "legendFormat": "{{instance}}",
+                  "refId": "E"
+                }
+              ],
+              "id": 5,
+              "gridPos": {
+                "x": 8,
+                "y": 1,
+                "w": 4,
+                "h": 4
+              },
+              "options": {
+                "fill": 1,
+                "lineWidth": 2,
+                "colors": ["#32CD32"]
+              }
+            }
+          ]
+        },
+        {
+          "type": "row",
+          "title": "HTTP Responses",
+          "panels": [
+            {
+              "type": "graph",
+              "title": "Response 2XX for HTTP/HTTPS",
+              "datasource": "Prometheus",
+              "targets": [
+                {
+                  "expr": "sum(nginx_http_requests_total{status=~'2..'})",
+                  "legendFormat": "HTTP 2XX",
+                  "refId": "F"
+                }
+              ],
+              "id": 6,
+              "gridPos": {
+                "x": 0,
+                "y": 2,
+                "w": 6,
+                "h": 4
+              },
+              "options": {
+                "fill": 1,
+                "lineWidth": 2,
+                "colors": ["#00FF00"]
+              }
+            },
+            {
+              "type": "stat",
+              "title": "Total Response 200 Req.",
+              "datasource": "Prometheus",
+              "targets": [
+                {
+                  "expr": "sum(nginx_http_requests_total{status='200'})",
+                  "refId": "G"
+                }
+              ],
+              "id": 7,
+              "gridPos": {
+                "x": 6,
+                "y": 2,
+                "w": 6,
+                "h": 4
+              },
+              "options": {
+                "colorMode": "value",
+                "graphMode": "none",
+                "valueOptions": {
+                  "unit": "none",
+                  "color": "#00FF00"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "row",
+          "title": "Error Responses",
+          "panels": [
+            {
+              "type": "graph",
+              "title": "Response 4XX for HTTP/HTTPS",
+              "datasource": "Prometheus",
+              "targets": [
+                {
+                  "expr": "sum(nginx_http_requests_total{status=~'4..'})",
+                  "legendFormat": "HTTP 4XX",
+                  "refId": "H"
+                }
+              ],
+              "id": 8,
+              "gridPos": {
+                "x": 0,
+                "y": 3,
+                "w": 6,
+                "h": 4
+              },
+              "options": {
+                "fill": 1,
+                "lineWidth": 2,
+                "colors": ["#FFA500"]
+              }
+            },
+            {
+              "type": "stat",
+              "title": "Total Response 404 Req.",
+              "datasource": "Prometheus",
+              "targets": [
+                {
+                  "expr": "sum(nginx_http_requests_total{status='404'})",
+                  "refId": "I"
+                }
+              ],
+              "id": 9,
+              "gridPos": {
+                "x": 6,
+                "y": 3,
+                "w": 6,
+                "h": 4
+              },
+              "options": {
+                "colorMode": "value",
+                "graphMode": "none",
+                "valueOptions": {
+                  "unit": "none",
+                  "color": "#FFA500"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "row",
+          "title": "NGINX Connections",
+          "panels": [
+            {
+              "type": "graph",
+              "title": "Nginx Connections Accepted",
+              "datasource": "Prometheus",
+              "targets": [
+                {
+                  "expr": "nginx_connections_accepted",
+                  "refId": "M"
+                }
+              ],
+              "id": 13,
+              "gridPos": {
+                "x": 0,
+                "y": 4,
+                "w": 6,
+                "h": 4
+              },
+              "options": {
+                "fill": 1,
+                "lineWidth": 2,
+                "colors": ["#1E90FF"]
+              }
+            },
+            {
+              "type": "graph",
+              "title": "Nginx Active Connections",
+              "datasource": "Prometheus",
+              "targets": [
+                {
+                  "expr": "nginx_connections_active",
+                  "refId": "O"
+                }
+              ],
+              "id": 15,
+              "gridPos": {
+                "x": 6,
+                "y": 4,
+                "w": 6,
+                "h": 4
+              },
+              "options": {
+                "fill": 1,
+                "lineWidth": 2,
+                "colors": ["#32CD32"]
+              }
+            }
+          ]
+        },
+        {
+          "type": "row",
+          "title": "Request Details",
+          "panels": [
+            {
+              "type": "table",
+              "title": "Each Request Detail",
+              "datasource": "Prometheus",
+              "targets": [
+                {
+                  "expr": "nginx_http_requests_total",
+                  "refId": "T"
+                }
+              ],
+              "id": 20,
+              "gridPos": {
+                "x": 0,
+                "y": 5,
+                "w": 12,
+                "h": 4
+              },
+              "options": {
+                "showHeader": true
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+  
+===
+// {
+//     "dashboard": {
+//       "id": null,
+//       "title": "System and Nginx Monitoring",
+//       "uid": "system-nginx-dashboard",
+//       "timezone": "browser",
+//       "schemaVersion": 30,
+//       "version": 1,
+//       "refresh": "5s",
+//       "panels": [
+//         {
+//           "type": "graph",
+//           "title": "CPU Usage",
+//           "datasource": "Prometheus",
+//           "targets": [
+//             {
+//               "expr": "100 - (avg by (instance) (irate(node_cpu_seconds_total{mode='idle'}[5m])) * 100)",
+//               "legendFormat": "{{instance}}",
+//               "refId": "A"
+//             }
+//           ],
+//           "id": 1
+//         },
+//         {
+//           "type": "gauge",
+//           "title": "Current CPU Utilization %",
+//           "datasource": "Prometheus",
+//           "targets": [
+//             {
+//               "expr": "100 - (avg(irate(node_cpu_seconds_total{mode='idle'}[5m])) * 100)",
+//               "legendFormat": "{{instance}}",
+//               "refId": "B"
+//             }
+//           ],
+//           "id": 2
+//         },
+//         {
+//           "type": "gauge",
+//           "title": "Current Memory Utilization",
+//           "datasource": "Prometheus",
+//           "targets": [
+//             {
+//               "expr": "(node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes * 100",
+//               "refId": "C"
+//             }
+//           ],
+//           "id": 3
+//         },
+//         {
+//           "type": "graph",
+//           "title": "Network Input",
+//           "datasource": "Prometheus",
+//           "targets": [
+//             {
+//               "expr": "irate(node_network_receive_bytes_total[5m])",
+//               "legendFormat": "{{instance}}",
+//               "refId": "D"
+//             }
+//           ],
+//           "id": 4
+//         },
+//         {
+//           "type": "graph",
+//           "title": "Network Output",
+//           "datasource": "Prometheus",
+//           "targets": [
+//             {
+//               "expr": "irate(node_network_transmit_bytes_total[5m])",
+//               "legendFormat": "{{instance}}",
+//               "refId": "E"
+//             }
+//           ],
+//           "id": 5
+//         },
+//         {
+//           "type": "graph",
+//           "title": "Response 2XX for HTTP/HTTPS",
+//           "datasource": "Prometheus",
+//           "targets": [
+//             {
+//               "expr": "sum(nginx_http_requests_total{status=~'2..'})",
+//               "legendFormat": "HTTP 2XX",
+//               "refId": "F"
+//             }
+//           ],
+//           "id": 6
+//         },
+//         {
+//           "type": "stat",
+//           "title": "Total Response 200 Req.",
+//           "datasource": "Prometheus",
+//           "targets": [
+//             {
+//               "expr": "sum(nginx_http_requests_total{status='200'})",
+//               "refId": "G"
+//             }
+//           ],
+//           "id": 7
+//         },
+//         {
+//           "type": "graph",
+//           "title": "Response 4XX for HTTP/HTTPS",
+//           "datasource": "Prometheus",
+//           "targets": [
+//             {
+//               "expr": "sum(nginx_http_requests_total{status=~'4..'})",
+//               "legendFormat": "HTTP 4XX",
+//               "refId": "H"
+//             }
+//           ],
+//           "id": 8
+//         },
+//         {
+//           "type": "stat",
+//           "title": "Total Response 404 Req.",
+//           "datasource": "Prometheus",
+//           "targets": [
+//             {
+//               "expr": "sum(nginx_http_requests_total{status='404'})",
+//               "refId": "I"
+//             }
+//           ],
+//           "id": 9
+//         },
+//         {
+//           "type": "graph",
+//           "title": "Response 3XX for HTTP/HTTPS",
+//           "datasource": "Prometheus",
+//           "targets": [
+//             {
+//               "expr": "sum(nginx_http_requests_total{status=~'3..'})",
+//               "legendFormat": "HTTP 3XX",
+//               "refId": "J"
+//             }
+//           ],
+//           "id": 10
+//         },
+//         {
+//           "type": "graph",
+//           "title": "Response 5XX for HTTP/HTTPS",
+//           "datasource": "Prometheus",
+//           "targets": [
+//             {
+//               "expr": "sum(nginx_http_requests_total{status=~'5..'})",
+//               "legendFormat": "HTTP 5XX",
+//               "refId": "K"
+//             }
+//           ],
+//           "id": 11
+//         },
+//         {
+//           "type": "stat",
+//           "title": "Total Request 503 Response",
+//           "datasource": "Prometheus",
+//           "targets": [
+//             {
+//               "expr": "sum(nginx_http_requests_total{status='503'})",
+//               "refId": "L"
+//             }
+//           ],
+//           "id": 12
+//         },
+//         {
+//           "type": "graph",
+//           "title": "Nginx Connections Accepted",
+//           "datasource": "Prometheus",
+//           "targets": [
+//             {
+//               "expr": "nginx_connections_accepted",
+//               "refId": "M"
+//             }
+//           ],
+//           "id": 13
+//         },
+//         {
+//           "type": "graph",
+//           "title": "Nginx Writing Connections",
+//           "datasource": "Prometheus",
+//           "targets": [
+//             {
+//               "expr": "nginx_connections_writing",
+//               "refId": "N"
+//             }
+//           ],
+//           "id": 14
+//         },
+//         {
+//           "type": "graph",
+//           "title": "Nginx Active Connections",
+//           "datasource": "Prometheus",
+//           "targets": [
+//             {
+//               "expr": "nginx_connections_active",
+//               "refId": "O"
+//             }
+//           ],
+//           "id": 15
+//         },
+//         {
+//           "type": "graph",
+//           "title": "Nginx Waiting Connections",
+//           "datasource": "Prometheus",
+//           "targets": [
+//             {
+//               "expr": "nginx_connections_waiting",
+//               "refId": "P"
+//             }
+//           ],
+//           "id": 16
+//         },
+//         {
+//           "type": "graph",
+//           "title": "Handled Requests",
+//           "datasource": "Prometheus",
+//           "targets": [
+//             {
+//               "expr": "nginx_http_requests_total",
+//               "refId": "Q"
+//             }
+//           ],
+//           "id": 17
+//         },
+//         {
+//           "type": "graph",
+//           "title": "Nginx Requests",
+//           "datasource": "Prometheus",
+//           "targets": [
+//             {
+//               "expr": "nginx_http_requests_total",
+//               "refId": "R"
+//             }
+//           ],
+//           "id": 18
+//         },
+//         {
+//           "type": "graph",
+//           "title": "Nginx Reading",
+//           "datasource": "Prometheus",
+//           "targets": [
+//             {
+//               "expr": "nginx_connections_reading",
+//               "refId": "S"
+//             }
+//           ],
+//           "id": 19
+//         },
+//         {
+//           "type": "table",
+//           "title": "Each Request Detail",
+//           "datasource": "Prometheus",
+//           "targets": [
+//             {
+//               "expr": "nginx_http_requests_total",
+//               "refId": "T"
+//             }
+//           ],
+//           "id": 20
+//         }
+//       ]
+//     }
+//   }
+  

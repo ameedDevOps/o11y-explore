@@ -1,0 +1,202 @@
+{
+    "annotations": {
+      "list": []
+    },
+    "editable": true,
+    "gnetId": null,
+    "graphTooltip": 0,
+    "id": null,
+    "panels": [
+      {
+        "datasource": "Prometheus",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 9,
+          "w": 12,
+          "x": 0,
+          "y": 0
+        },
+        "id": 1,
+        "options": {
+          "showThresholdLabels": false,
+          "showThresholdMarkers": true
+        },
+        "targets": [
+          {
+            "expr": "sum(kube_pod_container_resource_requests_cpu_cores{namespace=\"$namespace\"})",
+            "legendFormat": "{{container}}",
+            "refId": "A"
+          }
+        ],
+        "title": "CPU Requests per Pod",
+        "type": "gauge"
+      },
+      {
+        "datasource": "Prometheus",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 9,
+          "w": 12,
+          "x": 12,
+          "y": 0
+        },
+        "id": 2,
+        "options": {
+          "showThresholdLabels": false,
+          "showThresholdMarkers": true
+        },
+        "targets": [
+          {
+            "expr": "sum(kube_pod_container_resource_limits_memory_bytes{namespace=\"$namespace\"})",
+            "legendFormat": "{{container}}",
+            "refId": "B"
+          }
+        ],
+        "title": "Memory Requests per Pod",
+        "type": "gauge"
+      },
+      {
+        "datasource": "Prometheus",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 9,
+          "w": 24,
+          "x": 0,
+          "y": 9
+        },
+        "id": 3,
+        "targets": [
+          {
+            "expr": "nginx_http_requests_total{namespace=\"$namespace\", pod=\"$pod\"}",
+            "legendFormat": "{{pod}}",
+            "refId": "C"
+          }
+        ],
+        "title": "NGINX HTTP Requests",
+        "type": "timeseries"
+      },
+      {
+        "datasource": "Prometheus",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 9,
+          "w": 24,
+          "x": 0,
+          "y": 18
+        },
+        "id": 4,
+        "targets": [
+          {
+            "expr": "rate(nginx_http_requests_total{namespace=\"$namespace\", pod=\"$pod\"}[5m])",
+            "legendFormat": "Rate of requests",
+            "refId": "D"
+          }
+        ],
+        "title": "NGINX Request Rate",
+        "type": "timeseries"
+      }
+    ],
+    "templating": {
+      "list": [
+        {
+          "name": "namespace",
+          "query": "label_values(kube_pod_info, namespace)",
+          "refresh": 1,
+          "type": "query"
+        },
+        {
+          "name": "pod",
+          "query": "label_values(kube_pod_info{namespace=\"$namespace\"}, pod)",
+          "refresh": 1,
+          "type": "query"
+        }
+      ]
+    },
+    "title": "Namespace Monitoring with NGINX",
+    "version": 1
+  }
+  

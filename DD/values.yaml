@@ -1,0 +1,17 @@
+datadog:
+  apiKey: "<YOUR_DATADOG_API_KEY>"
+  site: "datadoghq.com"  # Or your specific region (e.g., datadoghq.eu)
+  clusterName: "your-eks-cluster"
+  
+  agents:
+    logEnabled: true
+    apmEnabled: true
+    processAgentEnabled: true
+
+  resources:
+    limits:
+      memory: "512Mi"
+      cpu: "200m"
+    requests:
+      memory: "256Mi"
+      cpu: "100m"

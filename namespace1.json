@@ -1,0 +1,382 @@
+{
+    "annotations": {
+      "list": []
+    },
+    "editable": true,
+    "gnetId": null,
+    "graphTooltip": 0,
+    "id": null,
+    "panels": [
+      {
+        "datasource": "$datasource",
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "color": {
+              "mode": "thresholds"
+            },
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "yellow",
+                  "value": 75
+                },
+                {
+                  "color": "red",
+                  "value": 90
+                }
+              ]
+            }
+          }
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 0
+        },
+        "id": 1,
+        "targets": [
+          {
+            "expr": "sum(namespace_cpu:container_cpu_usage_seconds_total:sum_rate{namespace=\"$namespace\"})",
+            "legendFormat": "CPU Usage",
+            "refId": "A"
+          }
+        ],
+        "title": "CPU Usage (Namespace)",
+        "type": "gauge"
+      },
+      {
+        "datasource": "$datasource",
+        "fieldConfig": {
+          "defaults": {
+            "unit": "bytes",
+            "color": {
+              "mode": "thresholds"
+            },
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "yellow",
+                  "value": 75
+                },
+                {
+                  "color": "red",
+                  "value": 90
+                }
+              ]
+            }
+          }
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 0
+        },
+        "id": 2,
+        "targets": [
+          {
+            "expr": "sum(namespace_memory:container_memory_usage_bytes:sum{namespace=\"$namespace\"})",
+            "legendFormat": "Memory Usage",
+            "refId": "B"
+          }
+        ],
+        "title": "Memory Usage (Namespace)",
+        "type": "gauge"
+      },
+      {
+        "datasource": "$datasource",
+        "fieldConfig": {
+          "defaults": {
+            "unit": "bytes/s",
+            "color": {
+              "mode": "thresholds"
+            },
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "yellow",
+                  "value": 1000000
+                },
+                {
+                  "color": "red",
+                  "value": 5000000
+                }
+              ]
+            }
+          }
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 8
+        },
+        "id": 3,
+        "targets": [
+          {
+            "expr": "sum(rate(container_network_receive_bytes_total{namespace=\"$namespace\"}[5m]))",
+            "legendFormat": "Network In",
+            "refId": "C"
+          },
+          {
+            "expr": "sum(rate(container_network_transmit_bytes_total{namespace=\"$namespace\"}[5m]))",
+            "legendFormat": "Network Out",
+            "refId": "D"
+          }
+        ],
+        "title": "Network Traffic (Namespace)",
+        "type": "timeseries"
+      },
+      {
+        "datasource": "$datasource",
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "color": {
+              "mode": "thresholds"
+            },
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 1
+                }
+              ]
+            }
+          }
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 8
+        },
+        "id": 4,
+        "targets": [
+          {
+            "expr": "sum(kube_pod_container_status_restarts_total{namespace=\"$namespace\"}) by (pod)",
+            "legendFormat": "{{pod}}",
+            "refId": "E"
+          }
+        ],
+        "title": "Pod Restarts (Namespace)",
+        "type": "heatmap"
+      },
+      {
+        "datasource": "$datasource",
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "color": {
+              "mode": "thresholds"
+            },
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 1
+                }
+              ]
+            }
+          }
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 24,
+          "x": 0,
+          "y": 16
+        },
+        "id": 5,
+        "targets": [
+          {
+            "expr": "sum(kube_pod_container_status_terminated{namespace=\"$namespace\"})",
+            "legendFormat": "Terminated Pods",
+            "refId": "F"
+          }
+        ],
+        "title": "Pod Terminations (Namespace)",
+        "type": "timeseries"
+      },
+      {
+        "datasource": "$datasource",
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "color": {
+              "mode": "thresholds"
+            },
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "yellow",
+                  "value": 80
+                },
+                {
+                  "color": "red",
+                  "value": 90
+                }
+              ]
+            }
+          }
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 24
+        },
+        "id": 6,
+        "targets": [
+          {
+            "expr": "sum(namespace_cpu:container_cpu_usage_seconds_total:sum_rate{namespace=\"$namespace\"}) / sum(kube_pod_container_resource_requests_cpu_cores{namespace=\"$namespace\"}) * 100",
+            "legendFormat": "CPU Usage vs Requests",
+            "refId": "G"
+          }
+        ],
+        "title": "CPU Usage vs Requests (Namespace)",
+        "type": "gauge"
+      },
+      {
+        "datasource": "$datasource",
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "color": {
+              "mode": "thresholds"
+            },
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "yellow",
+                  "value": 80
+                },
+                {
+                  "color": "red",
+                  "value": 90
+                }
+              ]
+            }
+          }
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 24
+        },
+        "id": 7,
+        "targets": [
+          {
+            "expr": "sum(namespace_memory:container_memory_usage_bytes:sum{namespace=\"$namespace\"}) / sum(kube_pod_container_resource_requests_memory_bytes{namespace=\"$namespace\"}) * 100",
+            "legendFormat": "Memory Usage vs Requests",
+            "refId": "H"
+          }
+        ],
+        "title": "Memory Usage vs Requests (Namespace)",
+        "type": "gauge"
+      },
+      {
+        "datasource": "$datasource",
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "color": {
+              "mode": "thresholds"
+            },
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "yellow",
+                  "value": 1
+                },
+                {
+                  "color": "red",
+                  "value": 3
+                }
+              ]
+            }
+          }
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 24,
+          "x": 0,
+          "y": 32
+        },
+        "id": 8,
+        "targets": [
+          {
+            "expr": "sum(kube_persistentvolumeclaim_info{namespace=\"$namespace\"}) by (persistentvolumeclaim)",
+            "legendFormat": "{{persistentvolumeclaim}}",
+            "refId": "I"
+          }
+        ],
+        "title": "Persistent Volume Claims (Namespace)",
+        "type": "timeseries"
+      }
+    ],
+    "templating": {
+      "list": [
+        {
+          "name": "namespace",
+          "label": "Namespace",
+          "query": "label_values(kube_namespace_labels, namespace)",
+          "refresh": 1,
+          "type": "query"
+        },
+        {
+          "name": "datasource",
+          "label": "Datasource",
+          "query": "prometheus",
+          "refresh": 1,
+          "type": "datasource",
+          "pluginId": "prometheus"
+        }
+      ]
+    },
+    "title": "Comprehensive Namespace Metrics",
+    "version": 1
+  }
+  

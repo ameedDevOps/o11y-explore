@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: datadog-agent
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: datadog-agent
+  template:
+    metadata:
+      labels:
+        app: datadog-agent
+    spec:
+      serviceAccountName: datadog-agent  # Add service account
+      containers:
+        - name: agent
+          image: "gcr.io/datadoghq/agent:latest"
+          env:
+            - name: DD_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: datadog-secret
+                  key: api-key
+            - name: DD_SITE
+              value: {{ .Values.datadog.site | quote }}
+            - name: DD_LOGS_ENABLED
+              value: {{ .Values.datadog.agents.logEnabled | quote }}
+            - name: DD_APM_ENABLED
+              value: {{ .Values.datadog.agents.apmEnabled | quote }}  # Enable APM
+            - name: DD_PROCESS_AGENT_ENABLED
+              value: {{ .Values.datadog.agents.processAgentEnabled | quote }}
+            - name: DD_KUBERNETES_KUBE_STATE_METRICS_ENABLED
+              value: "false"  # Kube-state-metrics is already enabled
+            - name: DD_COLLECT_KUBERNETES_EVENTS
+              value: "true"
+            - name: DD_CLUSTER_AGENT_ENABLED
+              value: "true"
+            - name: DD_CLUSTER_AGENT_AUTH_TOKEN
+              value: "your-cluster-agent-auth-token"
+            - name: DD_AGENT_HOST
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+            - name: DD_TRACE_AGENT_PORT
+              value: "8126"
+          ports:
+            - containerPort: 8125
+              name: dogstatsd
+              protocol: UDP
+            - containerPort: 8126
+              name: trace-agent  # APM port
+              protocol: TCP
+          resources:
+            limits:
+              memory: {{ .Values.datadog.resources.limits.memory }}
+              cpu: {{ .Values.datadog.resources.limits.cpu }}
+            requests:
+              memory: {{ .Values.datadog.resources.requests.memory }}
+              cpu: {{ .Values.datadog.resources.requests.cpu }}
